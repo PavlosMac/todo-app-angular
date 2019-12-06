@@ -3,6 +3,7 @@ import {TodoService} from '../todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTable} from '@angular/material';
 import {Todo} from '../todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-todo',
@@ -44,25 +45,56 @@ export class ListTodoComponent implements OnInit{
 
   onRowClicked(row) {
     console.log('do something with row ', row);
-    this.openDialog('display', row)
+    this.openDialog( 'display', row);
   }
 
-  openDialog(action, obj) {
+  openDialog( mode: string, row?: Todo | null) {
     const dialogConfig = new MatDialogConfig();
+    let entry: Todo | null;
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    const entry = this.dataSource.find( el => {
-      return el.id === obj.id;
-    });
+
+    if( mode !== 'create') {
+      entry = this.dataSource.find( el => {
+        return el.id === row.id;
+      });
+    }
 
     dialogConfig.data = {
-      action: true,
-      title: obj.title,
-      content: `${entry.body}`
+      display: mode === 'display',
+      editMode: mode === 'edit',
+      createMode: mode === 'create',
+      title: row ? row.title : null,
+      content: entry ? `${entry.body}` : null
     };
 
-    this.dialog.open(DialogBoxComponent, dialogConfig);
+    if(mode === 'create') {
+      dialogConfig['height'] = '400px';
+      dialogConfig['width'] = '300px';
+    }
+
+    const dialogRef = this.dialog.open(DialogBoxComponent, dialogConfig);
+
+    dialogRef.afterClosed()
+      .pipe(
+        map( res => {
+          if (res.edit) {
+            return this.openDialog( 'edit', row)
+          }
+          if (res.update) {
+            this.todoService.updateTodo( row.id.toString(), res.newTodo )
+          }
+          if (res.delete) {
+            this.todoService.deleteTodo( row.id.toString() )
+          }
+        })
+      ).subscribe();
+
+  }
+
+  openCreateDialog() {
+    this.openDialog('create', null)
   }
 
   // addRowData(row_obj){

@@ -1,34 +1,76 @@
-<ng-container *ngIf="true">
+<ng-container *ngIf="displayOnly">
   <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
 
   <mat-dialog-content>
 
-    {{ dynamicContent }}
+    {{ content }}
 
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button class="mat-raised-button" (click)="close()">Close</button>
+    <button class="mat-raised-button" (click)="close()">Cancel</button>
+    <button class="mat-raised-button" (click)="update()">Edit Todo</button>
+    <button class="mat-raised-button" (click)="deleteTodo()">Delete</button>
   </mat-dialog-actions>
 
 </ng-container>
 
-<ng-container *ngIf="false">
+<ng-container *ngIf="editMode">
+
   <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
 
-  <mat-dialog-content>
-
-    {{ dynamicContent }}
-
-  </mat-dialog-content>
-
-<!--  <mat-form-field>-->
-<!--    <input matInput [(ngModel)]="playlistNewName" placeholder="New playlist name">-->
-<!--  </mat-form-field>-->
+  <mat-form-field>
+    <input matInput [(ngModel)]="newTodoBody" placeholder="Edit todo">
+  </mat-form-field>
 
   <mat-dialog-actions>
-<!--    <button class="mat-raised-button" (click)="confirmPlaylistName()">Confirm</button>-->
-    <button class="mat-raised-button" (click)="close()">Close</button>
+    <button class="mat-raised-button" (click)="close()">Cancel</button>
+    <button class="mat-raised-button" (click)="updateTodo()">Update</button>
   </mat-dialog-actions>
+
+</ng-container>
+
+<ng-container *ngIf="create">
+
+  <div fxLayout="column" fxLayoutAlign="space-between center">
+
+    <h2 fxFlex mat-dialog-title>Create a Todo!</h2>
+
+    <div fxFlex class="space">
+      <mat-form-field>
+        <input matInput [(ngModel)]="newTodoTitle" placeholder="Todo title">
+      </mat-form-field>
+
+    </div>
+
+    <div fxFlex class="space">
+      <mat-form-field>
+
+      <textarea [(ngModel)]="newTodoBody" placeholder="Todo body"
+                matInput
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="7"></textarea>
+      </mat-form-field>
+    </div>
+
+<!--    <div fxFlex class="space">-->
+    <div fxFlex>
+      <mat-radio-group fxLayout fxLayoutAlign="center center" fxLayoutGap="2px">
+        <label style="margin-left: 10px">Priority</label>
+        <mat-radio-button [(ngModel)]="newPriority" value="1">High</mat-radio-button>
+        <mat-radio-button [(ngModel)]="newPriority" value="2">Low</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxFlex class="space-radio">
+      <mat-dialog-actions class="space">
+        <button class="mat-raised-button" (click)="close()">Cancel</button>
+        <button class="mat-raised-button" (click)="createTodo()">Create</button>
+      </mat-dialog-actions>
+    </div>
+
+  </div>
 
 </ng-container>
