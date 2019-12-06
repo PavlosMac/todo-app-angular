@@ -27,10 +27,11 @@ export class ListTodoComponent implements OnInit{
 
   dataSource = this.elementData;
 
-
-  displayedColumns = ["title", "body", "created", "dateUpdated", "completed"];
+  expandedElement: Todo | null;
+  displayedColumns = ["title", "created", "dateUpdated", "completed"];
 
   constructor(private todoService: TodoService, public dialog: MatDialog) { }
+
 
   ngOnInit() {
     this.todoService.findTodos()

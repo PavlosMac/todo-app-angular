@@ -10,3 +10,12 @@ th.mat-header-cell, .mat-cell {
   text-align: center;
   width: 5rem;
 }
+
+
+tr.element-row:not(.example-expanded-row):hover {
+  background: #777;
+}
+
+tr.element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}

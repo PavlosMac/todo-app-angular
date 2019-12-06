@@ -1,0 +1,34 @@
+<ng-container *ngIf="true">
+  <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
+
+  <mat-dialog-content>
+
+    {{ dynamicContent }}
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button class="mat-raised-button" (click)="close()">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>
+
+<ng-container *ngIf="false">
+  <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
+
+  <mat-dialog-content>
+
+    {{ dynamicContent }}
+
+  </mat-dialog-content>
+
+<!--  <mat-form-field>-->
+<!--    <input matInput [(ngModel)]="playlistNewName" placeholder="New playlist name">-->
+<!--  </mat-form-field>-->
+
+  <mat-dialog-actions>
+<!--    <button class="mat-raised-button" (click)="confirmPlaylistName()">Confirm</button>-->
+    <button class="mat-raised-button" (click)="close()">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>
