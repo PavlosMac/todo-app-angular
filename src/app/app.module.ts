@@ -6,31 +6,36 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
+  MatButtonModule, MatDialogModule, MatFormFieldModule,
   MatInputModule,
-  MatPaginatorModule,
-  MatProgressSpinnerModule,
-  MatSortModule,
   MatTableModule
 } from '@angular/material';
 import { ListTodoComponent } from './list-todo/list-todo.component';
+import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ListTodoComponent
+    ListTodoComponent,
+    DialogBoxComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FlexLayoutModule,
     NoopAnimationsModule,
-    MatInputModule,
     MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
   ],
   providers: [],
+  entryComponents: [
+    DialogBoxComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
