@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {Todo, TodoEntry} from '../models/todo.model';
+import {Todo} from '../models/todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +23,13 @@ export class TodoService {
       map(res => res)
     );
   }
-  //
-  // deleteTodo(id: string) {
-  //   return this.http.delete(`http://localhost:8000/api/todo/${id}`)
-  //     .pipe(
-  //     map(res => console.log('returning res on DELETE  == ', res))
-  //   );
-  // }
+
+  deleteTodo(id: number) {
+    return this.http.delete(`/api/todos/${id}/`)
+      .pipe(
+      map(res => res)
+    );
+  }
 
   createTodo( entry: object ) {
     return this.http.post(`api/todos/`, entry, this.HTTP_OPTIONS)

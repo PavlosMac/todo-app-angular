@@ -83,7 +83,14 @@ export class ListTodoComponent implements OnInit {
                 })
           }
           if (res.delete) {
-            // this.todoService.deleteTodo( row.id.toString() )
+            this.todoService.deleteTodo(entry.id)
+              .subscribe(
+                () => {
+                  const idx = this.dataSource.findIndex(item => item.id === entry.id);
+                  this.dataSource.splice(idx, 1);
+                  this.table.renderRows();
+                }
+              )
           }
           if (res.create) {
             this.todoService.createTodo(res.entry)
@@ -102,30 +109,5 @@ export class ListTodoComponent implements OnInit {
   openCreateDialog() {
     this.openDialog('create', null)
   }
-
-  // addRowData(row_obj){
-  //   const d = new Date();
-  //   this.dataSource.data.push({
-  //     id: d.getTime(),
-  //     name: row_obj.name
-  //   });
-  //   this.table.renderRows();
-  // }
-  //
-  // updateRowData(row_obj){
-  //   this.dataSource.data = this.dataSource.data.filter((value, key) => {
-  //     if(value.id == row_obj.id){
-  //       value.name = row_obj.name;
-  //     }
-  //     return true;
-  //   });
-  // }
-  //
-  // deleteRowData(row_obj){
-  //   this.dataSource.data = this.dataSource.data.filter((value, key) => {
-  //     return value.id != row_obj.id;
-  //   });
-  // }
-
 
 }
