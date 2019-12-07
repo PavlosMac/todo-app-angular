@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {TodoService} from '../services/todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTable} from '@angular/material';
 import {Todo} from '../models/todo.model';
@@ -55,11 +55,10 @@ export class ListTodoComponent implements OnInit {
       display: mode === 'display',
       editMode: mode === 'edit',
       createMode: mode === 'create',
-      title: row ? row.title : null,
-      content: entry ? `${entry.description}` : null
+      entryToEdit: entry ? entry : null
     };
 
-    if (mode === 'create') {
+    if (mode === 'create' || mode == 'edit') {
       dialogConfig['height'] = '400px';
       dialogConfig['width'] = '300px';
     }
@@ -69,11 +68,19 @@ export class ListTodoComponent implements OnInit {
     dialogRef.afterClosed()
       .pipe(
         map(res => {
+          if (!res)
+            return;
           if (res.edit) {
             return this.openDialog('edit', row)
           }
-          if (res.editTodo) {
-            // this.todoService.updateTodo( row.id.toString(), res.newTodo )
+          if (res.editCurrentEntry) {
+            this.todoService.updateTodo(res.entry, entry.id)
+              .subscribe(
+                (entry: Todo) => {
+                  const idx = this.dataSource.findIndex(item => item.id === entry.id);
+                  this.dataSource.splice(idx, 1, entry);
+                  this.table.renderRows();
+                })
           }
           if (res.delete) {
             // this.todoService.deleteTodo( row.id.toString() )

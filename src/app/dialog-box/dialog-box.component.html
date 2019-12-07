@@ -1,9 +1,9 @@
 <ng-container *ngIf="displayOnly">
-  <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
+  <h2 mat-dialog-title>{{ entry.title }}</h2>
 
   <mat-dialog-content>
 
-    {{ content }}
+    {{ entry.description }}
 
   </mat-dialog-content>
 
@@ -15,24 +15,10 @@
 
 </ng-container>
 
-<ng-container *ngIf="editMode">
+<ng-container *ngIf="create || editMode">
 
-  <h2 mat-dialog-title>{{ dialogueTitle }}</h2>
-
-  <mat-form-field>
-    <input matInput [(ngModel)]="newTodoBody" placeholder="Edit todo">
-  </mat-form-field>
-
-  <mat-dialog-actions>
-    <button class="mat-raised-button" (click)="close()">Cancel</button>
-    <button class="mat-raised-button" (click)="updateTodo()">Update</button>
-  </mat-dialog-actions>
-
-</ng-container>
-
-
-<ng-container *ngIf="create">
-  <h2 mat-dialog-title>New Todo</h2>
+  <h2 *ngIf="create" mat-dialog-title>New Todo</h2>
+  <h2 *ngIf="editMode" mat-dialog-title>Edit Todo</h2>
 
   <mat-dialog-content [formGroup]="form">
 
@@ -61,14 +47,15 @@
     <mat-radio-group class="space" fxLayout fxLayoutAlign="center center" fxLayoutGap="2px"
                      formControlName="priority_level">
       <mat-label>Priority</mat-label>
-      <mat-radio-button value="high">High</mat-radio-button>
-      <mat-radio-button value="low">Low</mat-radio-button>
+      <mat-radio-button value="High">High</mat-radio-button>
+      <mat-radio-button value="Low">Low</mat-radio-button>
     </mat-radio-group>
 
   </mat-dialog-content>
 
   <mat-dialog-actions class="space">
     <button class="mat-raised-button" (click)="close()">Close</button>
-    <button class="mat-raised-button mat-primary" (click)="createTodo()">Save</button>
+    <button *ngIf="create" class="mat-raised-button mat-primary" (click)="createTodo()">Save</button>
+    <button *ngIf="editMode" class="mat-raised-button mat-primary" (click)="editTodo()">Update</button>
   </mat-dialog-actions>
 </ng-container>

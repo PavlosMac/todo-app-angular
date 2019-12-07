@@ -9,27 +9,21 @@ import {Todo, TodoEntry} from '../models/todo.model';
 })
 export class TodoService {
 
+  HTTP_OPTIONS = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json'
+    })
+  };
+
   constructor(private http: HttpClient) {
   }
 
-  // findTodos(): Observable<any> {
-  //   return this.http.get('http://localhost:8000/api/todo')
-  //     .pipe(
-  //       map(res => {
-  //         console.log("getting all todods === ", res)
-  //         return of([])
-  //       })
-  //     );
-  // }
 
-  // updateTodo(id: string, body: string) {
-  //   return this.http.post(`http://localhost:8000/api/todo/${id}`, {
-  //     params: new HttpParams()
-  //       .set('body', body)
-  //   }).pipe(
-  //     map(res => console.log('returning res on post data == ', res))
-  //   );
-  // }
+  updateTodo(todo: Todo, id: number) {
+    return this.http.put(`/api/todos/${id}/`, todo , this.HTTP_OPTIONS).pipe(
+      map(res => res)
+    );
+  }
   //
   // deleteTodo(id: string) {
   //   return this.http.delete(`http://localhost:8000/api/todo/${id}`)
@@ -39,12 +33,7 @@ export class TodoService {
   // }
 
   createTodo( entry: object ) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json'
-      })
-    };
-    return this.http.post(`api/todos/`, entry, httpOptions)
+    return this.http.post(`api/todos/`, entry, this.HTTP_OPTIONS)
       .pipe(
         map(res => res)
       );

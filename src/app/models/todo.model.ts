@@ -8,7 +8,7 @@ export interface Todo {
   dateCreated?: string;
   dateUpdated?: string;
   completed: boolean;
-  priority: string
+  priority_level: string
 }
 
 export class TodoEntry implements Deserializable {
@@ -19,7 +19,7 @@ export class TodoEntry implements Deserializable {
   public date_created: string;
   public date_updated?: string;
   public completed: boolean;
-  public priority: string;
+  public priority_level: string;
 
   deserialize(input: any): this {
     return Object.assign(this, input);
