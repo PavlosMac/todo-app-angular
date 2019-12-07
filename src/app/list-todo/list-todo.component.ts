@@ -1,62 +1,64 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {TodoService} from '../todo.service';
+import {TodoService} from '../services/todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTable} from '@angular/material';
-import {Todo} from '../todo.model';
+import {Todo} from '../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-list-todo',
   templateUrl: './list-todo.component.html',
   styleUrls: ['./list-todo.component.scss']
 })
-export class ListTodoComponent implements OnInit{
+export class ListTodoComponent implements OnInit {
 
   // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   // @ViewChild(MatTable, { static: true }) table: MatTable<any>;
 
 
-  public elementData = [
-    {id: 29, title: "new todo 1", body: 'Hydrogen fdfdfdsfs fefefeifaeff faefeafeafaef', priority: "3", completed: false},
-    {id: 12, title: "new todo 2", body: 'Helium', priority: "9", completed: true},
-    {id: 1, title: "new todo 3", body: 'Lithium', priority: "2", completed: false},
-    {id: 7, title: "new todo 4", body: 'Beryllium', priority: "1", completed: true},
-    {id: 6, title: "new todo 5", body: 'Boron', priority: "0", completed: false},
-    {id: 4, title: "new todo 6", body: 'Carbon', priority: "10", completed: false},
-    {id: 3, title: "new todo 7", body: 'Nitrogen', priority: "4", completed: true}
-  ];
+  // public elementData = [
+  //   {id: 29, title: "new todo 1", body: 'Hydrogen fdfdfdsfs fefefeifaeff faefeafeafaef', priority: "3", completed: false},
+  //   {id: 12, title: "new todo 2", body: 'Helium', priority: "9", completed: true},
+  //   {id: 1, title: "new todo 3", body: 'Lithium', priority: "2", completed: false},
+  //   {id: 7, title: "new todo 4", body: 'Beryllium', priority: "1", completed: true},
+  //   {id: 6, title: "new todo 5", body: 'Boron', priority: "0", completed: false},
+  //   {id: 4, title: "new todo 6", body: 'Carbon', priority: "10", completed: false},
+  //   {id: 3, title: "new todo 7", body: 'Nitrogen', priority: "4", completed: true}
+  // ];
 
-  dataSource = this.elementData;
+  // dataSource = this.elementData;
+  dataSource;
 
   expandedElement: Todo | null;
   displayedColumns = ["title", "created", "dateUpdated", "completed"];
 
-  constructor(private todoService: TodoService, public dialog: MatDialog) { }
-
-
-  ngOnInit() {
-    this.todoService.findTodos()
-      .subscribe(
-        res => {
-          this.dataSource = res as Todo[];
-        }
-      );
+  constructor(private route: ActivatedRoute, private todoService: TodoService, public dialog: MatDialog) {
+    this.route.data.pipe(
+      take(1),
+      map(res => res)
+    ).subscribe(res => {
+      this.dataSource = res['data']
+    });
   }
+
+
+  ngOnInit() {}
 
   onRowClicked(row) {
     console.log('do something with row ', row);
-    this.openDialog( 'display', row);
+    this.openDialog('display', row);
   }
 
-  openDialog( mode: string, row?: Todo | null) {
+  openDialog(mode: string, row?: Todo | null) {
     const dialogConfig = new MatDialogConfig();
     let entry: Todo | null;
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
 
-    if( mode !== 'create') {
-      entry = this.dataSource.find( el => {
+    if (mode !== 'create') {
+      entry = this.dataSource.find(el => {
         return el.id === row.id;
       });
     }
@@ -66,10 +68,10 @@ export class ListTodoComponent implements OnInit{
       editMode: mode === 'edit',
       createMode: mode === 'create',
       title: row ? row.title : null,
-      content: entry ? `${entry.body}` : null
+      content: entry ? `${entry.description}` : null
     };
 
-    if(mode === 'create') {
+    if (mode === 'create') {
       dialogConfig['height'] = '400px';
       dialogConfig['width'] = '300px';
     }
@@ -78,15 +80,21 @@ export class ListTodoComponent implements OnInit{
 
     dialogRef.afterClosed()
       .pipe(
-        map( res => {
+        map(res => {
           if (res.edit) {
-            return this.openDialog( 'edit', row)
+            return this.openDialog('edit', row)
           }
-          if (res.update) {
-            this.todoService.updateTodo( row.id.toString(), res.newTodo )
+          if (res.editTodo) {
+            // this.todoService.updateTodo( row.id.toString(), res.newTodo )
           }
           if (res.delete) {
-            this.todoService.deleteTodo( row.id.toString() )
+            // this.todoService.deleteTodo( row.id.toString() )
+          }
+          if (res.create) {
+            this.todoService.createTodo( res.entry )
+              .subscribe(
+                entry => this.dataSource.push(entry)
+              )
           }
         })
       ).subscribe();

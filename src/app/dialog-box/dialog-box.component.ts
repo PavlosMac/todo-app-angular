@@ -1,6 +1,6 @@
 import {Component, Inject, NgZone, OnInit, Optional, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {TodoEntry} from '../todo.model';
+import {Todo, TodoEntry} from '../models/todo.model';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {take} from 'rxjs/operators';
 
@@ -42,11 +42,14 @@ export class DialogBoxComponent {
   }
 
   updateTodo() {
-    this.dialogRef.close({newTodo: this.newTodoBody, update: true});
+    this.dialogRef.close({editTodo: this.newTodoBody});
   }
 
   createTodo() {
-    this.dialogRef.close({newTodoAll: new TodoEntry(this.newTodoTitle, this.newTodoBody, this.newPriority)});
+    this.dialogRef.close({
+      create: true,
+      entry: {title: this.newTodoTitle, description: this.newTodoBody, priority_level: this.newPriority}
+    });
   }
 
   deleteTodo() {
