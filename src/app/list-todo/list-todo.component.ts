@@ -14,21 +14,8 @@ import {ActivatedRoute} from '@angular/router';
 export class ListTodoComponent implements OnInit {
 
   // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  // @ViewChild(MatTable, { static: true }) table: MatTable<any>;
-
-
-  // public elementData = [
-  //   {id: 29, title: "new todo 1", body: 'Hydrogen fdfdfdsfs fefefeifaeff faefeafeafaef', priority: "3", completed: false},
-  //   {id: 12, title: "new todo 2", body: 'Helium', priority: "9", completed: true},
-  //   {id: 1, title: "new todo 3", body: 'Lithium', priority: "2", completed: false},
-  //   {id: 7, title: "new todo 4", body: 'Beryllium', priority: "1", completed: true},
-  //   {id: 6, title: "new todo 5", body: 'Boron', priority: "0", completed: false},
-  //   {id: 4, title: "new todo 6", body: 'Carbon', priority: "10", completed: false},
-  //   {id: 3, title: "new todo 7", body: 'Nitrogen', priority: "4", completed: true}
-  // ];
-
-  // dataSource = this.elementData;
-  dataSource;
+  @ViewChild(MatTable, {static: true}) table: MatTable<any>;
+  dataSource: Todo[];
 
   expandedElement: Todo | null;
   displayedColumns = ["title", "created", "dateUpdated", "completed"];
@@ -43,7 +30,8 @@ export class ListTodoComponent implements OnInit {
   }
 
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   onRowClicked(row) {
     console.log('do something with row ', row);
@@ -91,9 +79,12 @@ export class ListTodoComponent implements OnInit {
             // this.todoService.deleteTodo( row.id.toString() )
           }
           if (res.create) {
-            this.todoService.createTodo( res.entry )
+            this.todoService.createTodo(res.entry)
               .subscribe(
-                entry => this.dataSource.push(entry)
+                entry => {
+                  this.dataSource.push(entry as Todo);
+                  this.table.renderRows();
+                }
               )
           }
         })

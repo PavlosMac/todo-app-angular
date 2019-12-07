@@ -30,47 +30,45 @@
 
 </ng-container>
 
+
 <ng-container *ngIf="create">
+  <h2 mat-dialog-title>New Todo</h2>
 
-  <div fxLayout="column" fxLayoutAlign="space-between center">
+  <mat-dialog-content [formGroup]="form">
 
-    <h2 fxFlex mat-dialog-title>Create a Todo!</h2>
+    <mat-form-field class="space" [ngClass]="{'error': (f['title'].errors && !f['title'].pristine)
+     || (f['description'].errors && !f['description'].pristine)}">
+      <input matInput
+             placeholder="Title"
+             formControlName="title">
+      <mat-error>
+        <span *ngIf="f['title'].errors">required field</span>
+      </mat-error>
+    </mat-form-field>
 
-    <div fxFlex class="space">
-      <mat-form-field>
-        <input matInput [(ngModel)]="newTodoTitle" placeholder="Todo title">
-      </mat-form-field>
+    <mat-form-field class="space">
+          <textarea formControlName="description" placeholder="Description"
+                    matInput
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="7"></textarea>
+      <mat-error>
+        <span *ngIf="f['description'].errors">required field</span>
+      </mat-error>
+    </mat-form-field>
 
-    </div>
+    <mat-radio-group class="space" fxLayout fxLayoutAlign="center center" fxLayoutGap="2px"
+                     formControlName="priority_level">
+      <mat-label>Priority</mat-label>
+      <mat-radio-button value="high">High</mat-radio-button>
+      <mat-radio-button value="low">Low</mat-radio-button>
+    </mat-radio-group>
 
-    <div fxFlex class="space">
-      <mat-form-field>
+  </mat-dialog-content>
 
-      <textarea [(ngModel)]="newTodoBody" placeholder="Todo body"
-                matInput
-                cdkTextareaAutosize
-                #autosize="cdkTextareaAutosize"
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="7"></textarea>
-      </mat-form-field>
-    </div>
-
-<!--    <div fxFlex class="space">-->
-    <div fxFlex>
-      <mat-radio-group fxLayout fxLayoutAlign="center center" fxLayoutGap="2px">
-        <label style="margin-left: 10px">Priority</label>
-        <mat-radio-button ngDefaultControl [(ngModel)]="newPriority" value="1">High</mat-radio-button>
-        <mat-radio-button ngDefaultControl [(ngModel)]="newPriority" value="2">Low</mat-radio-button>
-      </mat-radio-group>
-    </div>
-
-    <div fxFlex class="space-radio">
-      <mat-dialog-actions class="space">
-        <button class="mat-raised-button" (click)="close()">Cancel</button>
-        <button class="mat-raised-button" (click)="createTodo()">Create</button>
-      </mat-dialog-actions>
-    </div>
-
-  </div>
-
+  <mat-dialog-actions class="space">
+    <button class="mat-raised-button" (click)="close()">Close</button>
+    <button class="mat-raised-button mat-primary" (click)="createTodo()">Save</button>
+  </mat-dialog-actions>
 </ng-container>

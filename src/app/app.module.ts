@@ -13,19 +13,23 @@ import {
 import { ListTodoComponent } from './list-todo/list-todo.component';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TodosResolverService} from './services/todosresolver.service';
+import { DateTimeFormatPipe } from './pipes/date-time-format.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListTodoComponent,
-    DialogBoxComponent
+    DialogBoxComponent,
+    DateTimeFormatPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     NoopAnimationsModule,
     MatTableModule,
@@ -35,7 +39,7 @@ import {FormsModule} from '@angular/forms';
     MatButtonModule,
     MatRadioModule
   ],
-  providers: [],
+  providers: [TodosResolverService],
   entryComponents: [
     DialogBoxComponent
   ],

@@ -1,15 +1,14 @@
-import {Component, Inject, NgZone, OnInit, Optional, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {Todo, TodoEntry} from '../models/todo.model';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {take} from 'rxjs/operators';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-dialog-box',
   templateUrl: './dialog-box.component.html',
   styleUrls: ['./dialog-box.component.scss']
 })
-export class DialogBoxComponent {
+export class DialogBoxComponent implements OnInit{
 
   dialogueTitle: string;
   content: string;
@@ -21,9 +20,11 @@ export class DialogBoxComponent {
   editMode = false;
   create = false;
 
+  form: FormGroup;
+
   @ViewChild('autosize', {static: false}) autosize: CdkTextareaAutosize;
 
-  constructor(private dialogRef: MatDialogRef<DialogBoxComponent>,
+  constructor(private fb: FormBuilder,private dialogRef: MatDialogRef<DialogBoxComponent>,
               @Inject(MAT_DIALOG_DATA) data: {title: string; content?: string, display?: boolean, createMode?: boolean, editMode?: boolean}) {
 
     this.dialogueTitle = data.title;
@@ -31,6 +32,16 @@ export class DialogBoxComponent {
     this.displayOnly = data.display;
     this.editMode = data.editMode;
     this.create = data.createMode;
+  }
+
+  ngOnInit() {
+    if(this.create) {
+      this.form = this.fb.group({
+        'title': new FormControl('', [Validators.required]),
+        'description': new FormControl('', [Validators.required]),
+        'priority_level': new FormControl('', [Validators.required])
+      });
+    }
   }
 
   close() {
@@ -46,11 +57,16 @@ export class DialogBoxComponent {
   }
 
   createTodo() {
+    if(!this.form.valid) {
+      return this.form.markAllAsTouched();
+    }
     this.dialogRef.close({
       create: true,
-      entry: {title: this.newTodoTitle, description: this.newTodoBody, priority_level: this.newPriority}
+      entry: this.form.value
     });
   }
+
+  get f() { return this.form.controls; }
 
   deleteTodo() {
     this.dialogRef.close({delete: true});
