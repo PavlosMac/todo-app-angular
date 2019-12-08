@@ -27,6 +27,9 @@ export class ListTodoComponent implements OnInit {
       take(1),
       map(res => res)
     ).subscribe(res => {
+      if (res['data'].length === 0) {
+        setTimeout(() => this.openCreateDialog(), 1000);
+      }
       this.dataSource = new MatTableDataSource(res['data']);
       this.sortByPriorityLevel();
     });
