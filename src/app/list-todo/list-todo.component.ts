@@ -25,7 +25,8 @@ export class ListTodoComponent implements OnInit {
       take(1),
       map(res => res)
     ).subscribe(res => {
-      this.dataSource = res['data']
+      this.dataSource = res['data'];
+      this.sortByPriorityLevel();
     });
   }
 
@@ -77,7 +78,7 @@ export class ListTodoComponent implements OnInit {
             this.todoService.updateTodo(res.entry, entry.id)
               .subscribe(
                 (entry: Todo) => {
-                  this.findAndUpdateDataTable(entry, 'edit');
+                  this.findAndUpdateDataTable(entry, 'update');
                 })
           }
           if (res.delete) {
@@ -93,6 +94,7 @@ export class ListTodoComponent implements OnInit {
               .subscribe(
                 entry => {
                   this.dataSource.push(entry as Todo);
+                  this.sortByPriorityLevel();
                   this.table.renderRows();
                 }
               )
@@ -111,6 +113,12 @@ export class ListTodoComponent implements OnInit {
 
   openCreateDialog() {
     this.openDialog('create', null)
+  }
+
+  sortByPriorityLevel() {
+    return this.dataSource.sort( (a, b) => {
+      return a.priority_level > b.priority_level ? 1 : -1;
+    })
   }
 
 }
