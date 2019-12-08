@@ -25,7 +25,6 @@ export class ListTodoComponent implements OnInit {
               public dialog: MatDialog) {
     this.route.data.pipe(
       take(1),
-      map(res => res)
     ).subscribe(res => {
       if (res['data'].length === 0) {
         setTimeout(() => this.openCreateDialog(), 1000);
