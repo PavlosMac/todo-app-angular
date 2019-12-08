@@ -1,9 +1,7 @@
 
 <div class="table"  fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="20px">
 
-  <!--  <div class="spinner-container" *ngIf="loading$ | async">-->
-  <!--    <mat-spinner></mat-spinner>-->
-  <!--  </div>-->
+ <app-loader></app-loader>
   <div fxFlex >
     <button fxFill (click)="openCreateDialog()" mat-button color="primary">Add Todo</button>
   </div>

@@ -30,12 +30,10 @@ export class ListTodoComponent implements OnInit {
     });
   }
 
-
   ngOnInit() {
   }
 
   onRowClicked(row) {
-    console.log('do something with row ', row);
     this.openDialog('display', row);
   }
 
@@ -108,15 +106,16 @@ export class ListTodoComponent implements OnInit {
     const idx = this.dataSource.findIndex(item => item.id === entry.id);
     action === 'update' ? this.dataSource.splice(idx, 1, entry)
       : this.dataSource.splice(idx, 1);
+    this.sortByPriorityLevel();
     this.table.renderRows();
   }
 
   openCreateDialog() {
-    this.openDialog('create', null)
+    this.openDialog('create', null);
   }
 
   sortByPriorityLevel() {
-    return this.dataSource.sort( (a, b) => {
+    return this.dataSource.sort((a, b) => {
       return a.priority_level > b.priority_level ? 1 : -1;
     })
   }
