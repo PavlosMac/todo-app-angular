@@ -77,18 +77,14 @@ export class ListTodoComponent implements OnInit {
             this.todoService.updateTodo(res.entry, entry.id)
               .subscribe(
                 (entry: Todo) => {
-                  const idx = this.dataSource.findIndex(item => item.id === entry.id);
-                  this.dataSource.splice(idx, 1, entry);
-                  this.table.renderRows();
+                  this.findAndUpdateDataTable(entry, 'edit');
                 })
           }
           if (res.delete) {
             this.todoService.deleteTodo(entry.id)
               .subscribe(
                 () => {
-                  const idx = this.dataSource.findIndex(item => item.id === entry.id);
-                  this.dataSource.splice(idx, 1);
-                  this.table.renderRows();
+                  this.findAndUpdateDataTable(entry, 'delete');
                 }
               )
           }
@@ -104,6 +100,13 @@ export class ListTodoComponent implements OnInit {
         })
       ).subscribe();
 
+  }
+
+  findAndUpdateDataTable(entry, action) {
+    const idx = this.dataSource.findIndex(item => item.id === entry.id);
+    action === 'update' ? this.dataSource.splice(idx, 1, entry)
+      : this.dataSource.splice(idx, 1);
+    this.table.renderRows();
   }
 
   openCreateDialog() {

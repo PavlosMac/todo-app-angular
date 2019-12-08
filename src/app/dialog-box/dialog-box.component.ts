@@ -41,7 +41,7 @@ export class DialogBoxComponent implements OnInit{
     if(this.create || this.editMode) {
       let title = this.editMode ? this.entry.title : '';
       let description = this.editMode ? this.entry.description : '';
-      let priority = this.editMode ? this.entry.priority_level : '';
+      let priority = this.editMode ? this.entry.priority_level : 'Low';
       this.form = this.fb.group({
         'title': new FormControl(title, [Validators.required]),
         'description': new FormControl(description, [Validators.required]),

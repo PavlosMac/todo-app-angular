@@ -22,8 +22,7 @@
 
   <mat-dialog-content [formGroup]="form">
 
-    <mat-form-field class="space" [ngClass]="{'error': (f['title'].errors && !f['title'].pristine)
-     || (f['description'].errors && !f['description'].pristine)}">
+    <mat-form-field class="space">
       <input matInput
              placeholder="Title"
              formControlName="title">
@@ -49,12 +48,15 @@
       <mat-label>Priority</mat-label>
       <mat-radio-button value="High">High</mat-radio-button>
       <mat-radio-button value="Low">Low</mat-radio-button>
+      <mat-error>
+        <span *ngIf="f['priority_level'].errors && !f.valid">required field</span>
+      </mat-error>
     </mat-radio-group>
 
   </mat-dialog-content>
 
   <mat-dialog-actions class="space">
-    <button class="mat-raised-button" (click)="close()">Close</button>
+    <button class="mat-raised-button" (mousedown)="close()">Close</button>
     <button *ngIf="create" class="mat-raised-button mat-primary" (click)="createTodo()">Save</button>
     <button *ngIf="editMode" class="mat-raised-button mat-primary" (click)="editTodo()">Update</button>
   </mat-dialog-actions>
