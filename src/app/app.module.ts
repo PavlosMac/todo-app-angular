@@ -7,7 +7,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatButtonModule, MatDialogModule, MatFormFieldModule,
-  MatInputModule, MatProgressSpinnerModule, MatRadioModule,
+  MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatRadioModule,
   MatTableModule
 } from '@angular/material';
 import { ListTodoComponent } from './list-todo/list-todo.component';
@@ -42,7 +42,8 @@ import {LoaderInterceptor} from './interceptors/loader.interceptor';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatRadioModule
+    MatRadioModule,
+    MatPaginatorModule
   ],
   providers: [TodosResolverService, LoaderService, { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }],
   entryComponents: [

@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TodoService} from '../services/todo.service';
-import {MatDialog, MatDialogConfig, MatPaginator, MatTable} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatPaginator, MatTable, MatTableDataSource} from '@angular/material';
 import {Todo} from '../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {map, take} from 'rxjs/operators';
@@ -13,24 +13,25 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ListTodoComponent implements OnInit {
 
-  // @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatTable, {static: true}) table: MatTable<any>;
-  dataSource: Todo[];
+  dataSource: MatTableDataSource<any>;
 
   expandedElement: Todo | null;
-  displayedColumns = ["title", "created", "dateUpdated", "completed"];
+  displayedColumns = ["title", "created", "dateUpdated"];
 
   constructor(private route: ActivatedRoute, private todoService: TodoService, public dialog: MatDialog) {
     this.route.data.pipe(
       take(1),
       map(res => res)
     ).subscribe(res => {
-      this.dataSource = res['data'];
+      this.dataSource = new MatTableDataSource(res['data']);
       this.sortByPriorityLevel();
     });
   }
 
   ngOnInit() {
+    setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
   onRowClicked(row) {
@@ -45,7 +46,7 @@ export class ListTodoComponent implements OnInit {
     dialogConfig.autoFocus = true;
 
     if (mode !== 'create') {
-      entry = this.dataSource.find(el => {
+      entry = this.dataSource.data.find(el => {
         return el.id === row.id;
       });
     }
@@ -91,7 +92,7 @@ export class ListTodoComponent implements OnInit {
             this.todoService.createTodo(res.entry)
               .subscribe(
                 entry => {
-                  this.dataSource.push(entry as Todo);
+                  this.dataSource.data.push(entry as Todo);
                   this.sortByPriorityLevel();
                   this.table.renderRows();
                 }
@@ -103,9 +104,9 @@ export class ListTodoComponent implements OnInit {
   }
 
   findAndUpdateDataTable(entry, action) {
-    const idx = this.dataSource.findIndex(item => item.id === entry.id);
-    action === 'update' ? this.dataSource.splice(idx, 1, entry)
-      : this.dataSource.splice(idx, 1);
+    const idx = this.dataSource.data.findIndex(item => item.id === entry.id);
+    action === 'update' ? this.dataSource.data.splice(idx, 1, entry)
+      : this.dataSource.data.splice(idx, 1);
     this.sortByPriorityLevel();
     this.table.renderRows();
   }
@@ -115,7 +116,7 @@ export class ListTodoComponent implements OnInit {
   }
 
   sortByPriorityLevel() {
-    return this.dataSource.sort((a, b) => {
+    return this.dataSource.data.sort((a, b) => {
       return a.priority_level > b.priority_level ? 1 : -1;
     })
   }

@@ -1,16 +1,22 @@
 
-.table {
+.table, .mat-table {
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  min-width: 500px;
+  min-width: 600px;
 }
 
-th.mat-header-cell, .mat-cell {
-  text-align: center;
-  width: 5rem;
-}
+th.mat-header-cell {
+  font-family: "Arial", Times, serif;
+  font-size: 1rem;
+  color: lightseagreen;
+  width: 4rem;
 
+  .mat-cell {
+    width: 1rem;
+    text-align: center;
+  }
+}
 
 tr.element-row:not(.example-expanded-row):hover {
   background: #777;
