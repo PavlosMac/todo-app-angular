@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Todo} from '../models/todo.model';
+import {Todo} from '../../models/todo.model';
 
 @Component({
   selector: 'app-dialog-box',

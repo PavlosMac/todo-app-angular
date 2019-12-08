@@ -9,7 +9,8 @@
 th.mat-header-cell {
   font-family: "Arial", Times, serif;
   font-size: 1rem;
-  color: lightseagreen;
+  color: dodgerblue;
+  font-weight: bold;
   width: 4rem;
 
   .mat-cell {
@@ -19,9 +20,5 @@ th.mat-header-cell {
 }
 
 tr.element-row:not(.example-expanded-row):hover {
-  background: #777;
-}
-
-tr.element-row:not(.example-expanded-row):active {
-  background: #efefef;
+  background: #1ab2bf;
 }

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {Todo} from '../models/todo.model';
+import {Todo, TodoEntry} from '../models/todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class TodoService {
 
   HTTP_OPTIONS = {
     headers: new HttpHeaders({
-      'Content-Type':  'application/json'
+      'Content-Type': 'application/json'
     })
   };
 
@@ -19,19 +19,22 @@ export class TodoService {
 
 
   updateTodo(todo: Todo, id: number) {
-    return this.http.put(`/api/todos/${id}/`, todo , this.HTTP_OPTIONS).pipe(
-      map(res => res)
-    );
+    return this.http.put(`/api/todos/${id}/`, todo, this.HTTP_OPTIONS)
+      .pipe(
+        map(res => {
+            return new TodoEntry().deserialize(res)
+          }
+        ));
   }
 
   deleteTodo(id: number) {
     return this.http.delete(`/api/todos/${id}/`)
       .pipe(
-      map(res => res)
-    );
+        map(res => res)
+      );
   }
 
-  createTodo( entry: object ) {
+  createTodo(entry: object) {
     return this.http.post(`api/todos/`, entry, this.HTTP_OPTIONS)
       .pipe(
         map(res => res)

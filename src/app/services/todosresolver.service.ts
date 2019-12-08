@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {Todo, TodoEntry} from '../models/todo.model';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -10,18 +10,16 @@ import {HttpClient} from '@angular/common/http';
 })
 export class TodosResolverService implements Resolve<Todo[]>  {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Observable<never> {
     console.log('resolver called');
     return this.http.get('api/todos/')
       .pipe(
-        catchError(err => {
-          console.error(err);
+        catchError(() => {
           return this.handleError();
         }),
         map( (res: Todo[]) => {
-          console.log(res)
           if (res) {
             return res.map(( t ) => {
               return new TodoEntry().deserialize( t );
@@ -36,7 +34,7 @@ export class TodosResolverService implements Resolve<Todo[]>  {
 
 
   handleError(): Observable<boolean[]> {
-    // this.router.navigate(['/not-found']);
+    this.router.navigate(['/not-found']);
     return of([false]);
   }
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {TodoService} from '../services/todo.service';
+import {TodoService} from '../../services/todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTable, MatTableDataSource} from '@angular/material';
-import {Todo} from '../models/todo.model';
+import {Todo} from '../../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {map, take} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
@@ -13,14 +13,16 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ListTodoComponent implements OnInit {
 
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  @ViewChild(MatTable, {static: true}) table: MatTable<any>;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild('table', {static: false}) table: MatTable<Todo>;
   dataSource: MatTableDataSource<any>;
 
   expandedElement: Todo | null;
   displayedColumns = ["title", "created", "dateUpdated"];
 
-  constructor(private route: ActivatedRoute, private todoService: TodoService, public dialog: MatDialog) {
+  constructor(private route: ActivatedRoute,
+              private todoService: TodoService,
+              public dialog: MatDialog) {
     this.route.data.pipe(
       take(1),
       map(res => res)
@@ -61,6 +63,8 @@ export class ListTodoComponent implements OnInit {
     if (mode === 'create' || mode == 'edit') {
       dialogConfig['height'] = '400px';
       dialogConfig['width'] = '300px';
+    } else {
+      dialogConfig['width'] = '300px';
     }
 
     const dialogRef = this.dialog.open(DialogBoxComponent, dialogConfig);
@@ -93,22 +97,32 @@ export class ListTodoComponent implements OnInit {
               .subscribe(
                 entry => {
                   this.dataSource.data.push(entry as Todo);
-                  this.sortByPriorityLevel();
-                  this.table.renderRows();
+                  this.resetTable();
                 }
               )
           }
         })
       ).subscribe();
-
   }
 
   findAndUpdateDataTable(entry, action) {
-    const idx = this.dataSource.data.findIndex(item => item.id === entry.id);
-    action === 'update' ? this.dataSource.data.splice(idx, 1, entry)
-      : this.dataSource.data.splice(idx, 1);
+    this.dataSource.data.forEach((element, index) => {
+      if (element.id === entry.id) {
+        if (action === 'update') {
+          this.dataSource.data[index] = entry;
+        }
+        if (action === 'delete') {
+          this.dataSource.data.splice(index, 1);
+        }
+      }
+    });
+    this.resetTable();
+  }
+
+  resetTable() {
+    this.dataSource = new MatTableDataSource(this.dataSource.data);
+    setTimeout(() => this.dataSource.paginator = this.paginator);
     this.sortByPriorityLevel();
-    this.table.renderRows();
   }
 
   openCreateDialog() {
@@ -118,7 +132,7 @@ export class ListTodoComponent implements OnInit {
   sortByPriorityLevel() {
     return this.dataSource.data.sort((a, b) => {
       return a.priority_level > b.priority_level ? 1 : -1;
-    })
+    });
   }
 
 }

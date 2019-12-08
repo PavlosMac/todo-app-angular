@@ -6,19 +6,21 @@ import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule, MatDialogModule, MatFormFieldModule,
+  MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule,
   MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatRadioModule,
   MatTableModule
 } from '@angular/material';
-import { ListTodoComponent } from './list-todo/list-todo.component';
-import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+import { ListTodoComponent } from './components/list-todo/list-todo.component';
+import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TodosResolverService} from './services/todosresolver.service';
 import { DateTimeFormatPipe } from './pipes/date-time-format.pipe';
-import { LoaderComponent } from './loader/loader.component';
+import { LoaderComponent } from './components/loader/loader.component';
 import {LoaderService} from './services/loader.service';
 import {LoaderInterceptor} from './interceptors/loader.interceptor';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import {PageNotFoundResolver} from './components/page-not-found/page-not-found.resolver';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import {LoaderInterceptor} from './interceptors/loader.interceptor';
     ListTodoComponent,
     DialogBoxComponent,
     DateTimeFormatPipe,
-    LoaderComponent
+    LoaderComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +37,7 @@ import {LoaderInterceptor} from './interceptors/loader.interceptor';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    MatCardModule,
     FlexLayoutModule,
     NoopAnimationsModule,
     MatProgressSpinnerModule,
@@ -45,7 +49,11 @@ import {LoaderInterceptor} from './interceptors/loader.interceptor';
     MatRadioModule,
     MatPaginatorModule
   ],
-  providers: [TodosResolverService, LoaderService, { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }],
+  providers: [
+    TodosResolverService,
+    PageNotFoundResolver,
+    LoaderService,
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }],
   entryComponents: [
     DialogBoxComponent
   ],
