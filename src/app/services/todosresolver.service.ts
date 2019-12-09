@@ -14,9 +14,10 @@ export class TodosResolverService implements Resolve<Todo[]>  {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Observable<never> {
     console.log('resolver called');
-    return this.http.get('api/todos/')
+    return this.http.get('/api/todos/')
       .pipe(
         catchError(() => {
+          console.log('catch error')
           return this.handleError();
         }),
         map( (res: Todo[]) => {

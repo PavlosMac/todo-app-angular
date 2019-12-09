@@ -35,7 +35,7 @@ export class TodoService {
   }
 
   createTodo(entry: object) {
-    return this.http.post(`api/todos/`, entry, this.HTTP_OPTIONS)
+    return this.http.post(`/api/todos/`, entry, this.HTTP_OPTIONS)
       .pipe(
         map(res => res)
       );
