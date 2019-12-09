@@ -3,8 +3,9 @@ import {TodoService} from '../../services/todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTable, MatTableDataSource} from '@angular/material';
 import {Todo} from '../../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
-import {map, take} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
+import {catchError, map, take} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-list-todo',
@@ -22,7 +23,8 @@ export class ListTodoComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private todoService: TodoService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private router: Router) {
     this.route.data.pipe(
       take(1),
     ).subscribe(res => {
@@ -81,30 +83,42 @@ export class ListTodoComponent implements OnInit {
           }
           if (res.editCurrentEntry) {
             this.todoService.updateTodo(res.entry, entry.id)
+              .pipe(
+                catchError(() => this.handleError())
+              )
               .subscribe(
-                (entry: Todo) => {
-                  this.findAndUpdateDataTable(entry, 'update');
-                })
+                (todo) => {
+                  this.findAndUpdateDataTable(todo as Todo, 'update');
+                });
           }
           if (res.delete) {
             this.todoService.deleteTodo(entry.id)
+              .pipe(
+                catchError(() => this.handleError())
+              )
               .subscribe(
                 () => {
                   this.findAndUpdateDataTable(entry, 'delete');
-                }
-              )
+                });
           }
           if (res.create) {
             this.todoService.createTodo(res.entry)
+              .pipe(
+                catchError(() => this.handleError())
+              )
               .subscribe(
                 entry => {
                   this.dataSource.data.push(entry as Todo);
                   this.resetTable();
-                }
-              )
+                });
           }
         })
       ).subscribe();
+  }
+
+  handleError(): Observable<boolean[]> {
+    this.router.navigate(['/not-found']);
+    return of([false]);
   }
 
   findAndUpdateDataTable(entry, action) {
@@ -136,5 +150,4 @@ export class ListTodoComponent implements OnInit {
       return a.priority_level > b.priority_level ? 1 : -1;
     });
   }
-
 }
