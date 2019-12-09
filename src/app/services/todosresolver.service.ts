@@ -11,13 +11,13 @@ import {environment} from '../../environments/environment';
 })
 export class TodosResolverService implements Resolve<Todo[]>  {
 
-  baseUrl = environment.apiUrl;
+  baseUrl = 'https://gentle-tor-22392.herokuapp.com';
 
   constructor(private http: HttpClient, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Observable<never> {
     console.log('resolver called');
-    console.log('called with ', this.baseUrl);
+    console.log(environment.production);
     const apiUrl = this.baseUrl + '/api/todos/';
     return this.http.get(apiUrl)
       .pipe(
