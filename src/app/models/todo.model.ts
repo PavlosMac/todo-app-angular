@@ -7,7 +7,6 @@ export interface Todo {
   description: string;
   dateCreated?: string;
   dateUpdated?: string;
-  completed: boolean;
   priority_level: string
 }
 
@@ -18,7 +17,6 @@ export class TodoEntry implements Deserializable {
   public description: string;
   public date_created: string;
   public date_updated?: string;
-  public completed: boolean;
   public priority_level: string;
 
   deserialize(input: any): this {
