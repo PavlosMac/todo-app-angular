@@ -65,10 +65,8 @@ export class ListTodoComponent implements OnInit {
 
     if (mode === 'create' || mode == 'edit') {
       dialogConfig['height'] = '400px';
-      dialogConfig['width'] = '300px';
-    } else {
-      dialogConfig['width'] = '300px';
     }
+    dialogConfig['width'] = '300px';
 
     const dialogRef = this.dialog.open(DialogBoxComponent, dialogConfig);
 
