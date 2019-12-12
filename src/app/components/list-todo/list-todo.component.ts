@@ -15,7 +15,6 @@ import {Observable, of} from 'rxjs';
 export class ListTodoComponent implements OnInit {
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild('table', {static: false}) table: MatTable<Todo>;
   dataSource: MatTableDataSource<any>;
 
   expandedElement: Todo | null;
