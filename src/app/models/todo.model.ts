@@ -23,3 +23,15 @@ export class TodoEntry implements Deserializable {
     return Object.assign(this, input);
   }
 }
+
+export class Todo {
+
+  constructor(id: number,
+              title: string,
+              description: string,
+              priority_level: string,
+              dateCreated?: string,
+              dateUpdated?: string,
+  ) {
+  }
+}
