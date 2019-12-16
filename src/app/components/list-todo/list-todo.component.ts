@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TodoService} from '../../services/todo.service';
-import {MatDialog, MatDialogConfig, MatPaginator, MatTable, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatPaginator, MatTableDataSource} from '@angular/material';
 import {Todo} from '../../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {catchError, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import {EMPTY} from 'rxjs';
 
 @Component({
   selector: 'app-list-todo',
@@ -113,9 +113,9 @@ export class ListTodoComponent implements OnInit {
       ).subscribe();
   }
 
-  handleError(): Observable<boolean[]> {
+  handleError() {
     this.router.navigate(['/not-found']);
-    return of([false]);
+    return EMPTY;
   }
 
   findAndUpdateDataTable(entry, action) {
