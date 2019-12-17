@@ -3,7 +3,6 @@ import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@ang
 import {Todo} from '../models/todo.model';
 import {EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
 import {TodoService} from './todo.service';
 
 @Injectable({
@@ -11,7 +10,7 @@ import {TodoService} from './todo.service';
 })
 export class TodosResolverService implements Resolve<Todo[]> {
 
-  constructor(private http: HttpClient, private router: Router, private todoService: TodoService) {
+  constructor(private router: Router, private todoService: TodoService) {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Observable<never> {

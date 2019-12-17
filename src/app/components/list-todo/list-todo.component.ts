@@ -5,7 +5,7 @@ import {Todo} from '../../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
 import {catchError, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {EMPTY, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-list-todo',
@@ -113,7 +113,7 @@ export class ListTodoComponent implements OnInit {
       ).subscribe();
   }
 
-  handleError() {
+  handleError(): Observable<never> {
     this.router.navigate(['/not-found']);
     return EMPTY;
   }
