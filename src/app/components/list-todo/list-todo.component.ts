@@ -18,7 +18,7 @@ export class ListTodoComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
 
   expandedElement: Todo | null;
-  displayedColumns = ["title", "created", "dateUpdated"];
+  displayedColumns = ["title", "priority", "dateUpdated"];
 
   constructor(private route: ActivatedRoute,
               private todoService: TodoService,
