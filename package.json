@@ -3,17 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "ng build --prod --output-path dist"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
-    "@angular/cli": "~8.3.20",
-    "@angular/compiler-cli": "~8.2.14",
     "@angular/animations": "~8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.14",
@@ -37,8 +34,11 @@
   "devDependencies": {
     "@angular-builders/jest": "^8.3.2",
     "@angular-devkit/build-angular": "~0.803.20",
+    "@angular/cli": "~8.3.20",
+    "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
     "@netbasal/spectator": "^3.12.0",
+    "@ngneat/spectator": "^4.10.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/jest": "^24.0.23",

@@ -3,7 +3,7 @@ import {TodoService} from '../../services/todo.service';
 import {MatDialog, MatDialogConfig, MatPaginator, MatTableDataSource} from '@angular/material';
 import {Todo} from '../../models/todo.model';
 import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
-import {catchError, map, take} from 'rxjs/operators';
+import {catchError, map, take, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {EMPTY, Observable} from 'rxjs';
 
@@ -24,18 +24,18 @@ export class ListTodoComponent implements OnInit {
               private todoService: TodoService,
               public dialog: MatDialog,
               private router: Router) {
+  }
+
+  ngOnInit() {
     this.route.data.pipe(
       take(1),
     ).subscribe(res => {
-      if (res['data'].length === 0) {
+      if (res['data'] && res['data'].length === 0) {
         setTimeout(() => this.openCreateDialog(), 1000);
       }
       this.dataSource = new MatTableDataSource(res['data']);
       this.sortByPriorityLevel();
     });
-  }
-
-  ngOnInit() {
     setTimeout(() => this.dataSource.paginator = this.paginator);
   }
 
@@ -143,6 +143,7 @@ export class ListTodoComponent implements OnInit {
   }
 
   sortByPriorityLevel() {
+    console.log('called')
     return this.dataSource.data.sort((a, b) => {
       return a.priority_level > b.priority_level ? 1 : -1;
     });

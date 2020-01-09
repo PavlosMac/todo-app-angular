@@ -10,12 +10,10 @@ import {Observable, throwError} from 'rxjs';
 })
 export class TodoService {
 
-  API_URL = Constants.PROD_URL;
-
   constructor(private http: HttpClient) {}
 
   getTodos(): Observable<any> {
-    return this.http.get(`${this.API_URL}/api/todos/`)
+    return this.http.get(`api/todos/`)
       .pipe(
         map((data: Todo[]) => {
           return data.map(todo => {
@@ -26,7 +24,7 @@ export class TodoService {
   }
 
   updateTodo(todo: Todo, id: number): Observable<any> {
-    return this.http.put(`${this.API_URL}/api/todos/${id}/`, todo)
+    return this.http.put(`api/todos/${id}/`, todo)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => {
@@ -36,7 +34,7 @@ export class TodoService {
   }
 
   deleteTodo(id: number): Observable<any> {
-    return this.http.delete(`${this.API_URL}/api/todos/${id}/`)
+    return this.http.delete(`api/todos/${id}/`)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => res)
@@ -44,7 +42,7 @@ export class TodoService {
   }
 
   createTodo(entry: object): Observable<any> {
-    return this.http.post(`${this.API_URL}/api/todos/`, entry)
+    return this.http.post(`api/todos/`, entry)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => res)
