@@ -1,9 +1,10 @@
 import {ListTodoComponent} from './list-todo.component';
 import {
-  MatButtonModule,
-  MatDialogModule,
+  MAT_DIALOG_DATA,
+  MatButtonModule, MatCardModule,
+  MatDialogModule, MatDialogRef, MatFormFieldModule, MatInputModule,
   MatPaginatorModule,
-  MatProgressSpinnerModule,
+  MatProgressSpinnerModule, MatRadioModule,
   MatTableModule
 } from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -14,9 +15,19 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Todo} from '../../models/todo.model';
 import {createRoutingFactory} from '@ngneat/spectator/jest';
 import {SpectatorRouting} from '@ngneat/spectator';
+import {DialogBoxComponent} from '../dialog-box/dialog-box.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {of} from 'rxjs';
+import {createTestComponentFactory, Spectator} from '@netbasal/spectator';
+import {BrowserModule, By} from '@angular/platform-browser';
+import {AppRoutingModule} from '../../app-routing.module';
+import {HttpClientModule} from '@angular/common/http';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {PageNotFoundComponent} from '../page-not-found/page-not-found.component';
+import {APP_BASE_HREF} from '@angular/common';
+import {SpectatorElement} from '@netbasal/spectator/lib/internals';
 
-
-describe('TodoListComponent', () => {
+describe('TodoListComponent with todo data provided from route', () => {
 
   Object.defineProperty(window, 'getComputedStyle', {
     value: () => ({
@@ -39,21 +50,30 @@ describe('TodoListComponent', () => {
 
   const createComponent = createRoutingFactory({
     declarations: [
-          DateTimeFormatPipe,
-          LoaderComponent
-        ],
-        imports: [
-          HttpClientTestingModule,
-          RouterTestingModule,
-          MatPaginatorModule,
-          FlexLayoutModule,
-          MatProgressSpinnerModule,
-          MatTableModule,
-          MatDialogModule,
-          MatButtonModule,
-          MatPaginatorModule],
+      DateTimeFormatPipe,
+      LoaderComponent
+    ],
+    imports: [
+      HttpClientTestingModule,
+      RouterTestingModule,
+      MatPaginatorModule,
+      FlexLayoutModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatDialogModule,
+      MatButtonModule,
+      MatPaginatorModule],
     component: ListTodoComponent,
-    data:  { data: [ {id: 133, title: 'some title', description: 'dsdsd', date_created:'2019-12-13T11:12:09.861699Z', date_updated:'2019-12-17T19:49:09.861699Z', priority_level: 'Low'} as Todo] }
+    data: {
+      data: [{
+        id: 133,
+        title: 'some title',
+        description: 'dsdsd',
+        date_created: '2019-12-13T11:12:09.861699Z',
+        date_updated: '2019-12-17T19:49:09.861699Z',
+        priority_level: 'Low'
+      } as Todo]
+    }
   });
 
 
@@ -68,8 +88,166 @@ describe('TodoListComponent', () => {
   });
 
   it('should pass one todo from activated route', () => {
-    spectator = createComponent();
     expect(spectator.component.dataSource.data[0]).toHaveLength(1);
     expect(spectator.component.dataSource.data[0]).toHaveId(133);
+  });
+
+  it('should call sortByPriorityLevel', () => {
+    spectator.fixture.whenStable().then(() => {
+      expect(spectator.component.sortByPriorityLevel).toHaveBeenCalled();
+      expect(spectator.component.sortByPriorityLevel).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('should instantiate MatDataSource', () => {
+    spectator.fixture.whenStable().then(() =>
+      expect(spectator.component.dataSource).toBeDefined()
+    )
+  });
+
+});
+
+describe('TodoListComponent without todo data provided from route', () => {
+
+  let spectator: SpectatorRouting<ListTodoComponent>;
+
+  const createComponent = createRoutingFactory({
+    declarations: [
+      DateTimeFormatPipe,
+      LoaderComponent
+    ],
+    componentProviders: [
+      {provide: MAT_DIALOG_DATA, useValue: {}},
+      {provide: MatDialogRef, useValue: {open: () => of(true)}}
+    ],
+    imports: [
+      FormsModule,
+      ReactiveFormsModule,
+      HttpClientTestingModule,
+      RouterTestingModule,
+      MatPaginatorModule,
+      FlexLayoutModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatDialogModule,
+      MatButtonModule,
+      MatPaginatorModule,
+      MatRadioModule,
+      MatFormFieldModule],
+    component: ListTodoComponent,
+    data: {data: []}
+  });
+
+
+  beforeEach(() => {
+    spectator = createComponent();
+  });
+
+  it('should initialise', () => {
+    expect(spectator.component).toBeTruthy();
+  });
+
+  it('should pass empty array from route', () => {
+    expect(spectator.component.dataSource.data[0]).toHaveLength(0);
+  });
+
+  it('should not instantiate MatDataSource', () => {
+    spectator.fixture.whenStable().then(() =>
+      expect(spectator.component.dataSource).toBeUndefined()
+    )
+  });
+
+  it('openCreateDialog should be called when no route data', () => {
+    spectator.fixture.whenStable().then(() => {
+      expect(spectator.component.sortByPriorityLevel).toHaveBeenCalledTimes(0);
+      expect(spectator.component.openCreateDialog).toHaveBeenCalled();
+      expect(spectator.component.dialog).toHaveBeenCalled();
+    });
+  });
+
+});
+
+describe('onRowClick should open mat dialog with options', () => {
+
+  Object.defineProperty(window, 'getComputedStyle', {
+    value: () => ({
+      getPropertyValue: (prop) => {
+        return '';
+      }
+    })
+  });
+  Object.defineProperty(window, 'matchMedia', {
+    value: () => ({
+      matches: false,
+      addListener: () => {
+      },
+      removeListener: () => {
+      }
+    })
+  });
+
+  let spectator: Spectator<ListTodoComponent>;
+
+  const createComponent = createTestComponentFactory({
+    declarations: [
+      DateTimeFormatPipe,
+      PageNotFoundComponent,
+      LoaderComponent,
+      DialogBoxComponent
+    ],
+    entryComponents: [DialogBoxComponent],
+    providers: [
+      {provide: MAT_DIALOG_DATA, useValue: {}},
+      {provide: APP_BASE_HREF, useValue: '/'},
+      {provide: MatDialogRef, useValue: {open: () => of(true)}}
+    ],
+    imports: [
+      RouterTestingModule,
+      BrowserModule,
+      AppRoutingModule,
+      HttpClientModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatCardModule,
+      FlexLayoutModule,
+      NoopAnimationsModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatRadioModule,
+      MatPaginatorModule
+    ],
+    component: ListTodoComponent,
+  });
+
+  beforeEach(() => {
+    spectator = createComponent();
+  });
+
+  it('should initialise', () => {
+    spectator = createComponent();
+
+    expect(spectator.component).toBeTruthy();
+  });
+
+  it('should be defined and have text ADD TODO', () => {
+    spectator = createComponent();
+    expect(spectator.query('button')).toBeDefined();
+    expect(spectator.query('button')).toHaveExactText('ADD TODO');
+  });
+
+  it('should call openCreateDialog if clicked', () => {
+    spectator = createComponent();
+    const button = <SpectatorElement>spectator.query('button');
+
+    spectator.click(button);
+
+    spectator.fixture.whenStable().then(() => {
+      expect(spectator.component.openCreateDialog).toHaveBeenCalledTimes(0);
+      expect(spectator.component.openDialog).toHaveBeenCalledTimes(0)
+    });
   });
 });
