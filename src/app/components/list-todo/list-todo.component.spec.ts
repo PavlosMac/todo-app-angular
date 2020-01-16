@@ -27,6 +27,95 @@ import {PageNotFoundComponent} from '../page-not-found/page-not-found.component'
 import {APP_BASE_HREF} from '@angular/common';
 import {SpectatorElement} from '@netbasal/spectator/lib/internals';
 
+
+describe('Handling of button events', () => {
+
+  Object.defineProperty(window, 'getComputedStyle', {
+    value: () => ({
+      getPropertyValue: (prop) => {
+        return '';
+      }
+    })
+  });
+  Object.defineProperty(window, 'matchMedia', {
+    value: () => ({
+      matches: false,
+      addListener: () => {
+      },
+      removeListener: () => {
+      }
+    })
+  });
+
+  let spectator: Spectator<ListTodoComponent>;
+
+  const createComponent = createTestComponentFactory({
+    entryComponents: [DialogBoxComponent],
+    declarations: [
+      DialogBoxComponent,
+      DateTimeFormatPipe,
+      PageNotFoundComponent,
+      LoaderComponent
+    ],
+    providers: [
+      {provide: MAT_DIALOG_DATA, useValue: {}},
+      {provide: APP_BASE_HREF, useValue: '/'},
+      {provide: MatDialogRef, useValue: {open: () => of(true)}}
+    ],
+    imports: [
+      RouterTestingModule,
+      BrowserModule,
+      AppRoutingModule,
+      HttpClientModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatCardModule,
+      FlexLayoutModule,
+      NoopAnimationsModule,
+      MatProgressSpinnerModule,
+      MatTableModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatInputModule,
+      MatButtonModule,
+      MatRadioModule,
+      MatPaginatorModule
+    ],
+    component: ListTodoComponent,
+  });
+
+  beforeEach(() => {
+    spectator = createComponent();
+  });
+
+  it('should initialise', () => {
+    expect(spectator.component).toBeTruthy();
+  });
+
+  it('should be defined and have text ADD TODO', () => {
+    expect(spectator.query('button')).toBeDefined();
+    expect(spectator.query('button')).toHaveExactText('ADD TODO');
+  });
+
+  it('should call openCreateDialog if clicked', () => {
+    const button = <SpectatorElement>spectator.query('button');
+
+    spyOn(spectator.component, 'openCreateDialog').and.callThrough();
+    spectator.click(button);
+
+    expect(spectator.component.openCreateDialog).toHaveBeenCalledTimes(1);
+  });
+
+  it('openCreateDialog should call openDialog if button is clicked', () => {
+    const button = <SpectatorElement>spectator.query('button');
+
+    spyOn(spectator.component, 'openDialog').and.callThrough();
+    spectator.click(button);
+
+    expect(spectator.component.openDialog).toHaveBeenCalledWith('create', null);
+  });
+});
+
 describe('TodoListComponent with todo data provided from route', () => {
 
   Object.defineProperty(window, 'getComputedStyle', {
@@ -162,92 +251,6 @@ describe('TodoListComponent without todo data provided from route', () => {
       expect(spectator.component.sortByPriorityLevel).toHaveBeenCalledTimes(0);
       expect(spectator.component.openCreateDialog).toHaveBeenCalled();
       expect(spectator.component.dialog).toHaveBeenCalled();
-    });
-  });
-
-});
-
-describe('onRowClick should open mat dialog with options', () => {
-
-  Object.defineProperty(window, 'getComputedStyle', {
-    value: () => ({
-      getPropertyValue: (prop) => {
-        return '';
-      }
-    })
-  });
-  Object.defineProperty(window, 'matchMedia', {
-    value: () => ({
-      matches: false,
-      addListener: () => {
-      },
-      removeListener: () => {
-      }
-    })
-  });
-
-  let spectator: Spectator<ListTodoComponent>;
-
-  const createComponent = createTestComponentFactory({
-    declarations: [
-      DateTimeFormatPipe,
-      PageNotFoundComponent,
-      LoaderComponent,
-      DialogBoxComponent
-    ],
-    entryComponents: [DialogBoxComponent],
-    providers: [
-      {provide: MAT_DIALOG_DATA, useValue: {}},
-      {provide: APP_BASE_HREF, useValue: '/'},
-      {provide: MatDialogRef, useValue: {open: () => of(true)}}
-    ],
-    imports: [
-      RouterTestingModule,
-      BrowserModule,
-      AppRoutingModule,
-      HttpClientModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatCardModule,
-      FlexLayoutModule,
-      NoopAnimationsModule,
-      MatProgressSpinnerModule,
-      MatTableModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule,
-      MatRadioModule,
-      MatPaginatorModule
-    ],
-    component: ListTodoComponent,
-  });
-
-  beforeEach(() => {
-    spectator = createComponent();
-  });
-
-  it('should initialise', () => {
-    spectator = createComponent();
-
-    expect(spectator.component).toBeTruthy();
-  });
-
-  it('should be defined and have text ADD TODO', () => {
-    spectator = createComponent();
-    expect(spectator.query('button')).toBeDefined();
-    expect(spectator.query('button')).toHaveExactText('ADD TODO');
-  });
-
-  it('should call openCreateDialog if clicked', () => {
-    spectator = createComponent();
-    const button = <SpectatorElement>spectator.query('button');
-
-    spectator.click(button);
-
-    spectator.fixture.whenStable().then(() => {
-      expect(spectator.component.openCreateDialog).toHaveBeenCalledTimes(0);
-      expect(spectator.component.openDialog).toHaveBeenCalledTimes(0)
     });
   });
 });

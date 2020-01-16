@@ -143,7 +143,6 @@ export class ListTodoComponent implements OnInit {
   }
 
   sortByPriorityLevel() {
-    console.log('called')
     return this.dataSource.data.sort((a, b) => {
       return a.priority_level > b.priority_level ? 1 : -1;
     });
