@@ -13,7 +13,7 @@ export class TodoService {
   constructor(private http: HttpClient) {}
 
   getTodos(): Observable<any> {
-    return this.http.get(`api/todos/`)
+    return this.http.get(`${Constants.PROD_URL}/api/todos/`)
       .pipe(
         map((data: Todo[]) => {
           return data.map(todo => {
@@ -24,17 +24,17 @@ export class TodoService {
   }
 
   updateTodo(todo: Todo, id: number): Observable<any> {
-    return this.http.put(`api/todos/${id}/`, todo)
+    return this.http.put(`${Constants.PROD_URL}/api/todos/${id}/`, todo)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => {
-            return new TodoEntry().deserialize(res)
+            return new TodoEntry().deserialize(res);
           }
         ));
   }
 
   deleteTodo(id: number): Observable<any> {
-    return this.http.delete(`api/todos/${id}/`)
+    return this.http.delete(`${Constants.PROD_URL}/api/todos/${id}/`)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => res)
@@ -42,7 +42,7 @@ export class TodoService {
   }
 
   createTodo(entry: object): Observable<any> {
-    return this.http.post(`api/todos/`, entry)
+    return this.http.post(`${Constants.PROD_URL}/api/todos/`, entry)
       .pipe(
         catchError((err) => throwError(err)),
         map(res => res)

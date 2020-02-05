@@ -27,7 +27,7 @@
              placeholder="Title"
              formControlName="title">
       <mat-error>
-        <span *ngIf="f['title'].errors">required field</span>
+        <span *ngIf="f['title'].errors && !f.valid">required - only alphabetic characters</span>
       </mat-error>
     </mat-form-field>
 
@@ -39,7 +39,7 @@
                     cdkAutosizeMinRows="1"
                     cdkAutosizeMaxRows="7"></textarea>
       <mat-error>
-        <span *ngIf="f['description'].errors">required field</span>
+        <span *ngIf="f['description'].errors && !f.valid">required - only alphabetic characters</span>
       </mat-error>
     </mat-form-field>
 

@@ -43,11 +43,13 @@ export class DialogBoxComponent implements OnInit{
       let description = this.editMode ? this.entry.description : '';
       let priority = this.editMode ? this.entry.priority_level : 'Low';
       this.form = this.fb.group({
-        'title': new FormControl(title, [Validators.required]),
-        'description': new FormControl(description, [Validators.required]),
+        'title': new FormControl(title, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
+        'description': new FormControl(description, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
         'priority_level': new FormControl(priority, [Validators.required])
       });
     }
+
+    this.form.valueChanges.subscribe( val => console.log(val))
   }
 
   close() {

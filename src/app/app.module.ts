@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatButtonModule, MatCardModule, MatDialogModule, MatFormFieldModule,
   MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatRadioModule,
@@ -33,13 +33,13 @@ import {PageNotFoundResolver} from './components/page-not-found/page-not-found.r
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     MatCardModule,
     FlexLayoutModule,
-    NoopAnimationsModule,
     MatProgressSpinnerModule,
     MatTableModule,
     MatDialogModule,
